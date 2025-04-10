@@ -1,0 +1,46 @@
+.news{
+    margin: 0 170px;
+    text-align: center;
+    background: linear-gradient(#92c286, white);
+    padding: 30px 0;
+    height: 200px;
+}
+
+.input{
+
+    position: relative;
+    text-align: center;
+    /* background-color: blue; */
+}
+
+.news input{ 
+    background-color: transparent;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 15px;
+    outline: none;
+    color: black;
+    width: 400px;
+}
+
+.news button{
+    position: absolute;
+    right: 19rem;
+    background-color: #549744;
+    border: none;
+    border-radius: 10px;
+    padding: 11px;
+    font-size: 15px;
+    outline: none;
+    color: white;
+    transition: .3s;
+}
+
+.news input:active{
+    border: white 1px solid;
+}
+
+.news button:hover{
+    background-color: #92c286;
+}
