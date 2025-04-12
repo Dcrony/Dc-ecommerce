@@ -10,6 +10,7 @@ import Product from './pages/Product'
 import Footers from './components/Footers'
 import Signup from './pages/signup'
 import MoreProduct from './pages/MoreProduct'
+import CheckoutPage from './pages/Checkout'
 
 function App() {
   
@@ -30,6 +31,7 @@ function App() {
           <Route path='/product' element={<Product/>}>
             <Route path=':productId' element={<Product/>} />
           </Route>
+          <Route path='/checkout' element={<CheckoutPage/>} />
         </Routes>
         <Footers/>
       </BrowserRouter>

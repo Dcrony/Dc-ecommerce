@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import './css/CartItems.css';
 import { ShopContext } from '../contexts/ShopContext';
 import { FaEraser } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const CartItem = () => {
     const { getTotalCartAmount, all_product, cartItems, removeFromCart } = useContext(ShopContext);
@@ -54,7 +55,7 @@ const CartItem = () => {
                             <h3>${getTotalCartAmount()}</h3>
                         </div>
                     </div>
-                    <button>PROCEED TO CHECKOUT</button>
+                    <button><Link to="/checkout" style={{textDecoration: 'none'}} >PROCEED TO CHECKOUT</Link> </button>
                 </div>
                 <div className="cartitem-promocode">
                     <p>If you have a promo code, enter it here</p>

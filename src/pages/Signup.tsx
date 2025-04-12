@@ -1,18 +1,17 @@
-import React from 'react'
-import { useState, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom'; // Added for navigation to login
-import './css/Login.css'
-
+import { Link } from 'react-router-dom';
+import './css/Login.css';
 
 const Signup = () => {
-    
+  const [name, setName] = useState<string>(''); // Added missing name state
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false); // Added terms checkbox state
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -23,13 +22,17 @@ const Signup = () => {
       return setError('Passwords do not match');
     }
 
+    if (!agreeToTerms) {
+      return setError('You must agree to the terms and conditions');
+    }
+
     try {
       setError('');
       setLoading(true);
-      await signup(email, password);
+      await signup(name, email, password);
       navigate('/');
     } catch (err) {
-      setError('Failed to create an account');
+      setError('Failed to create an account. ' + (err instanceof Error ? err.message : ''));
       console.error(err);
     } finally {
       setLoading(false);
@@ -38,49 +41,62 @@ const Signup = () => {
 
   return (
     <div className='signup'>
-    <div className="signup-content">
-      <h2>Register</h2>
-      {error && <div className="error">{error}</div>}
-      <form onSubmit={handleSubmit} className='signup-input'>
-        <input 
-          type="email" 
-          placeholder="Email" 
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input 
-          type="password" 
-          placeholder="Password" 
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={6}
-        />
-        <input 
-          type="password" 
-          placeholder="Confirm Password" 
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-        <button 
-          type="submit" 
-          disabled={loading}
-        >
-          {loading ? 'Creating Account...' : 'Register'}
-        </button>
-      </form>
-      <div className="auth-footer">
-        Already have an account? <Link to="/login" className='span'>Log In</Link>
-      </div>
-      <div className='signup-policy'>
-          <input type="checkbox" name="" id="" />
-          <p>By contiune, i agree to the terms of use & privacy policy</p>
+      <div className="signup-content">
+        <h2>Register</h2>
+        {error && <div className="error">{error}</div>}
+        <form onSubmit={handleSubmit} className='signup-input'>
+          <input 
+            type="text" 
+            placeholder="Name" 
+            value={name}
+            onChange={(e) => setName(e.target.value)} // Fixed to use setName
+            required
+          />
+          <input 
+            type="email" 
+            placeholder="Email" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input 
+            type="password" 
+            placeholder="Password" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+          />
+          <input 
+            type="password" 
+            placeholder="Confirm Password" 
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <div className='signup-policy'>
+            <input 
+              type="checkbox" 
+              checked={agreeToTerms}
+              onChange={(e) => setAgreeToTerms(e.target.checked)}
+              required
+            />
+            <p>By continuing, I agree to the terms of use & privacy policy</p>
+          </div>
+          <button 
+            type="submit" 
+            disabled={loading}
+            className={loading ? 'loading' : ''}
+          >
+            {loading ? 'Creating Account...' : 'Register'}
+          </button>
+        </form>
+        <div className="auth-footer">
+          Already have an account? <Link to="/login" className='span'>Log In</Link>
         </div>
-    </div>
+      </div>
     </div>
   );
 }
 
-export default Signup
+export default Signup;

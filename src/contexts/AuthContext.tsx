@@ -1,27 +1,54 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   signOut, 
-  onAuthStateChanged 
+  onAuthStateChanged,
+  User,
+  updateProfile
 } from 'firebase/auth';
 import { auth } from '../firebase';
 
-const AuthContext = createContext();
+interface AuthContextType {
+  currentUser: User | null;
+  signup: (name: string, email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
 
-export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  function signup(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async function signup(name: string, email: string, password: string) {
+    try {
+      // 1. First create user with email and password
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // 2. Then update the profile with display name
+      await updateProfile(userCredential.user, {
+        displayName: name
+      });
+      
+      // 3. Update our local state to reflect the changes
+      setCurrentUser({
+        ...userCredential.user,
+        displayName: name
+      });
+      
+    } catch (error) {
+      console.error("Signup error:", error);
+      throw error; // Re-throw to handle in UI component
+    }
   }
 
-  function login(email, password) {
+  async function login(email: string, password: string) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 
-  function logout() {
+  async function logout() {
     return signOut(auth);
   }
 
@@ -48,5 +75,9 @@ export function AuthProvider({ children }) {
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }

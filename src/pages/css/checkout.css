@@ -1,0 +1,57 @@
+.checkout{
+    background-color: white;
+    padding: 10px;
+    margin: 20px 120px;
+    width: 400px;
+   
+}
+
+.checkout-input{
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+.checkout-input input,
+.checkout-input textarea,
+.checkout-input select{
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 10px;
+    outline: none;
+    border: 1px solid grey;
+}
+
+.checkout-input select option{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.06rem;
+}
+
+.checkout button{
+    width: 100%;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    background-color: #549744;
+    transition: .5s;
+}
+
+.checkout button:hover{
+    background-color: #92c286;
+}
+
+.checkout p{
+    margin: 5px;
+}
+
+.checkout .span{
+    color: #549744;
+}
+
+.checkout .error{
+    color: white;
+    background-color: red;
+    padding: 8px;
+}
